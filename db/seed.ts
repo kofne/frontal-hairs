@@ -17,13 +17,25 @@ const main = async () => {
     await client.connect()
     const db = drizzle(client)
 
+    // Clear existing data
+    await db.delete(schema.accounts)
+    await db.delete(schema.users)
     await db.delete(schema.products)
 
+    // Insert sample data and get results
     const resProducts = await db
-      .insert(schema.products)
-      .values(sampleData.products)
+      .insert(schema.products) // Assuming you meant to insert products
+      .values(sampleData.products) // Ensure sampleData.products is defined
       .returning()
-    console.log({ resProducts })
+
+    const resUsers = await db
+      .insert(schema.users)
+      .values(sampleData.users)
+      .returning()
+
+    // Log results
+    console.log({ resProducts, resUsers })
+
     await client.end()
   } catch (error) {
     console.error(error)
